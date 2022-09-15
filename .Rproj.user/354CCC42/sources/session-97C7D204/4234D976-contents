@@ -12,7 +12,7 @@ knitr::opts_chunk$set(
 )
 ```
 
-# R语言地理信息数据处理——Geographic Data Processing in R
+# R语言地理信息数据处理
 
 <!-- badges: start -->
 <!-- badges: end -->
