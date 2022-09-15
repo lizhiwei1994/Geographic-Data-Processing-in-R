@@ -9,6 +9,8 @@
 
 ## 含经纬度的点数据转换成地图栅格数据
 
+### 经纬度点数据加载
+
 首先加载含经纬度的点数据。
 
 ``` r
@@ -22,6 +24,8 @@ head(pts)
 #> 5 116.45 39.55   165
 #> 6 115.55 39.65    73
 ```
+
+### 点数据到面数据
 
 转换的过程需要使用`raster`包。
 
@@ -42,7 +46,8 @@ rs = raster::rasterFromXYZ(pts)
 plot(rs)
 ```
 
-![](README_files/figure-gfm/unnamed-chunk-5-1.png)<!-- -->
+![](README_files/figure-gfm/unnamed-chunk-5-1.png)<!-- --> \###
+添加坐标系
 
 查看`rs`文件的坐标系。
 
@@ -94,11 +99,15 @@ crs(rs)
 #>         BBOX[-90,-180,90,180]]]
 ```
 
+### 结果保存为tif文件
+
 将转换结果保存为`tif`文件。
 
 ``` r
 writeRaster(rs,"result/rs.tif", overwrite = T)
 ```
+
+### 结果验证
 
 接下来我们验证导出的`rs.tif`文件能否通过经纬度，提取到`PM2.5`的浓度。
 我们提取`pts`第一行的数据。原始数据如下：
@@ -139,6 +148,8 @@ class(mypt)
 #> [1] "sp"
 ```
 
+#### extract()提取单个经纬度下的值
+
 使用`extract()`提取`lon = 116.35`和`lat = 39.45`位置下`PM2.5`的浓度。
 
 ``` r
@@ -146,6 +157,8 @@ extract(dat, mypt)
 #>       rs
 #> [1,] 165
 ```
+
+#### extract()提取单个经纬度下的值
 
 `extract()`函数还能一次提取多个经纬度的数据。
 
@@ -178,6 +191,8 @@ extract(dat, mypt2)
 
 ## 从netCDF4(nc)文件中提取特定坐标下的值
 
+### 预处理
+
 > 注意：以下清空环境的操作会让你R中的所有对象和R包都清空！！！所以在执行以下操作前，请确保所有重要的数据都已保存。或者你可以重新打开一个新的Rstudio来运行下边的代码。
 
 为了防止不同包中的函数冲突，我们需要清空环境。
@@ -190,7 +205,11 @@ rm(list = ls())
 
 其次同时按住`Ctrl+Shift+F10`重启Rstudio。
 
+### netCDF4文件简介
+
 `netCDF4`文件的后缀是`.nc`。关于什么是`netCDF4`文件，我不打算做过多介绍。更详细的介绍以及如何在R中处理`netCDF4`文件可以从[这个网站](https://pjbartlein.github.io/REarthSysSci/netCDF.html)找到。
+
+### nc数据加载
 
 本次使用的数据`cru10min30_tmp.nc`文件来自[Climate Research
 Unit](http://www.cru.uea.ac.uk/data)。包括0.5度网格上近地面空气温度的长期平均值（1961-1990年）。阵列的尺寸为`720`（经度）x`360`（纬度）x
@@ -204,6 +223,8 @@ mync = brick('data/cru10min30_tmp.nc')
 #> 载入需要的名字空间：ncdf4
 ```
 
+### nc数据查看
+
 查看`mync`的维度。
 
 ``` r
@@ -216,6 +237,9 @@ dim(mync)
 [![](images/nc维度示意图.png)](https://towardsdatascience.com/how-to-crack-open-netcdf-files-in-r-and-extract-data-as-time-series-24107b70dcd)
 
 由于`mync`有`12`个月的温度数据，所有我们在提取某个坐标下的温度时候应该会有`12`个结果。
+
+### 提取单个经纬度下的值在nc文件中
+
 我们先生成一个坐标，并提取该坐标下的温度数据。
 
 ``` r
@@ -239,6 +263,8 @@ extract(mync, mypt)
 dim(extract(mync, mypt))
 #> [1]  1 12
 ```
+
+### 提取多个经纬度下的值在nc文件中
 
 我们再试试提取多个坐标下的温度数据。
 
