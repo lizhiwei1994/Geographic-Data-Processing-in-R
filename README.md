@@ -3,9 +3,10 @@
 
 # R语言地理信息数据处理
 
-李志伟
+李志伟-首都医科大学
 
-首都医科大学
+*本教程所有出现的代码可以在`code/code.r`文件中找到。*
+*生成此教程的代码可以在`README.Rmd`文件中找到。*
 
 ## 含经纬度的点数据转换成地图栅格数据
 
@@ -46,8 +47,9 @@ rs = raster::rasterFromXYZ(pts)
 plot(rs)
 ```
 
-![](README_files/figure-gfm/unnamed-chunk-5-1.png)<!-- --> \###
-添加坐标系
+![](README_files/figure-gfm/unnamed-chunk-5-1.png)<!-- -->
+
+### 添加坐标系
 
 查看`rs`文件的坐标系。
 
