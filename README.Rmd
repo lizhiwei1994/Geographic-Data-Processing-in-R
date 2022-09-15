@@ -15,7 +15,22 @@ knitr::opts_chunk$set(
 
 # R语言地理信息数据处理
 
-李志伟-首都医科大学
+李志伟 (lizhiwei@ccmu.edu.cn)
+
+首都医科大学公共卫生学院，流行病和卫生统计学系
+
+北京市丰台区右安门外西头条10号
+
+Zhiwei Li
+
+Department of Epidemiology and Health Statistics
+
+School of Public Health, Capital Medical University
+
+No.10 Xitoutiao, Youanmen Wai Street
+
+Beijing, 100069
+
 
 *本教程所有出现的代码可以在`code/code.r`文件中找到。*
 *生成此教程的代码可以在`README.Rmd`文件中找到。*
