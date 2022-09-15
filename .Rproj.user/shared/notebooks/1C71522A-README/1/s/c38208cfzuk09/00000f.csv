@@ -1,0 +1,1 @@
+"0","mypt2 = SpatialPoints(mypt, proj4string=CRS(""+proj=longlat +datum=WGS84""))"
