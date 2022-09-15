@@ -8,7 +8,8 @@ output: github_document
 options(encoding = 'UTF-8') # 为了正确显示中文
 knitr::opts_chunk$set(
   collapse = TRUE,
-  comment = "#>"
+  comment = "#>",
+  cache = TRUE
 )
 ```
 
@@ -51,8 +52,7 @@ plot(rs)
 crs(rs)
 ```
 
-转换的`rs`文件没有坐标系，我们手动给他设置一个。
-根据[这个网站](https://gis.stackexchange.com/questions/111226/how-to-assign-crs-to-rasterlayer-in-r)的介绍，使用`'+init=EPSG:4326'`可以更容易适应其他参考系统。
+转换的`rs`文件没有坐标系，我们手动给他设置一个。 根据[这个网站](https://gis.stackexchange.com/questions/111226/how-to-assign-crs-to-rasterlayer-in-r)的介绍，使用`'+init=EPSG:4326'`可以更容易适应其他参考系统。
 
 > The result is the same, but this version is easier adaptable to other reference systems: `crs(r) <- CRS('+init=EPSG:4326')` if you know the EPSG number.
 
@@ -72,8 +72,8 @@ crs(rs)
 writeRaster(rs,"result/rs.tif", overwrite = T)
 ```
 
-接下来我们验证导出的`rs.tif`文件能否通过经纬度，提取到`PM2.5`的浓度。 
-我们提取`pts`第一行的数据。原始数据如下：
+接下来我们验证导出的`rs.tif`文件能否通过经纬度，提取到`PM2.5`的浓度。 我们提取`pts`第一行的数据。原始数据如下：
+
 ```{r}
 head(pts,1)
 ```
@@ -114,12 +114,14 @@ extract(dat, mypt)
 `extract()`函数还能一次提取多个经纬度的数据。
 
 创建包含3个经纬度的数据框。并转换为`sp`格式。
+
 ```{r}
 mypt2 = data.frame(lon = c(116.35, 115.75, 116.25), lat = c(39.45, 39.55, 39.55))
 mypt2
 ```
 
 转换为`sp`格式。
+
 ```{r}
 mypt2 = SpatialPoints(mypt2, proj4string=CRS("+proj=longlat +datum=WGS84"))
 ```
@@ -130,3 +132,78 @@ mypt2 = SpatialPoints(mypt2, proj4string=CRS("+proj=longlat +datum=WGS84"))
 extract(dat, mypt2)
 ```
 
+## 从netCDF4(nc)文件中提取特定坐标下的值
+
+> 注意：以下清空环境的操作会让你R中的所有对象和R包都清空！！！所以在执行以下操作前，请确保所有重要的数据都已保存。或者你可以重新打开一个新的Rstudio来运行下边的代码。
+
+为了防止不同包中的函数冲突，我们需要清空环境。
+
+首先运行:
+
+```{r}
+rm(list = ls())
+```
+
+其次同时按住`Ctrl+Shift+F10`重启Rstudio。
+
+`netCDF4`文件的后缀是`.nc`。关于什么是`netCDF4`文件，我不打算做过多介绍。更详细的介绍以及如何在R中处理`netCDF4`文件可以从[这个网站](https://pjbartlein.github.io/REarthSysSci/netCDF.html)找到。
+
+本次使用的数据`cru10min30_tmp.nc`文件来自[Climate Research Unit](http://www.cru.uea.ac.uk/data)。包括0.5度网格上近地面空气温度的长期平均值（1961-1990年）。阵列的尺寸为`720`（经度）x` 360`（纬度）x `12`（月份），从而形成一个`12`层的堆叠nc文件。
+
+使用`raster`包读取`nc`文件。
+
+```{r warning=FALSE}
+library(raster)
+mync = brick('data/cru10min30_tmp.nc')
+```
+
+查看`mync`的维度。
+
+```{r}
+dim(mync)
+```
+
+`mync`有`360`个纬度，`720`个经度和`12`个月。它在`nc`文件中分布情况类似于这样(图片仅为示意图，不代表`mync`的实际数据情况。点击图片，查看图片出处)。
+
+
+[![](images/nc维度示意图.png)](https://towardsdatascience.com/how-to-crack-open-netcdf-files-in-r-and-extract-data-as-time-series-24107b70dcd)
+
+
+由于`mync`有`12`个月的温度数据，所有我们在提取某个坐标下的温度时候应该会有`12`个结果。
+我们先生成一个坐标，并提取该坐标下的温度数据。
+
+```{r}
+mypt = data.frame(lon = 116.35, lat = 39.45)
+mypt = SpatialPoints(mypt, proj4string=CRS("+proj=longlat +datum=WGS84")) # 将mypt转换为sp
+```
+
+使用`extract()`函数提取`mypt`坐标下的温度数据。
+
+```{r}
+extract(mync, mypt)
+```
+
+可以看到提取出的数据有`1`行`12`列，分别对应`1`个坐标下的`12`个月的平均温度。
+
+```{r}
+dim(extract(mync, mypt))
+```
+
+我们再试试提取多个坐标下的温度数据。
+
+```{r}
+mypt2 = data.frame(lon = c(116.35, 115.75, 116.25), lat = c(39.45, 39.55, 39.55))
+mypt2 = SpatialPoints(mypt2, proj4string=CRS("+proj=longlat +datum=WGS84")) # 将mypt2转换为sp
+
+extract(mync, mypt2)
+```
+
+查看数据维度可以看到有`3`行`12`列，分别对应`3`个坐标下`12`个月的温度数据。
+
+```{r}
+dim(extract(mync, mypt2))
+```
+
+## 堆叠netCDF4(nc)文件
+
+未完待续...

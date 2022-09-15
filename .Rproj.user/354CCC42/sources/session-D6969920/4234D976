@@ -1,0 +1,31 @@
+{
+    "id": "4234D976",
+    "path": "E:/A/project/github/Geographic-Data-Processing-in-R/README.Rmd",
+    "project_path": "README.Rmd",
+    "type": "r_markdown",
+    "hash": "0",
+    "contents": "",
+    "dirty": false,
+    "created": 1663229232805.0,
+    "source_on_save": false,
+    "relative_order": 1,
+    "properties": {
+        "source_window_id": "",
+        "Source": "Source",
+        "cursorPosition": "134,27",
+        "scrollLine": "127",
+        "docOutlineVisible": "1",
+        "rmdVisualMode": "false",
+        "rmdVisualWrapConfigured": "true",
+        "rmdVisualModeLocation": "1982:3087.199951171875",
+        "rmdVisualCollapsedChunks": ""
+    },
+    "folds": "",
+    "lastKnownWriteTime": 1663246884,
+    "encoding": "UTF-8",
+    "collab_server": "",
+    "source_window": "",
+    "last_content_update": 1663246884969,
+    "read_only": false,
+    "read_only_alternatives": []
+}

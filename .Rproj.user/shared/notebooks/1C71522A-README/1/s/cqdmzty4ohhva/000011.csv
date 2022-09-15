@@ -1,0 +1,2 @@
+"0","mypt = data.frame(lon = 116.35, lat = 39.45)"
+"0","mypt = SpatialPoints(mypt, proj4string=CRS(""+proj=longlat +datum=WGS84"")) # 将mypt转换为sp"
