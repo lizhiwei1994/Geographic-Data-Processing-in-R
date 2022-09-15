@@ -21,17 +21,6 @@ knitr::opts_chunk$set(
 
 北京市丰台区右安门外西头条10号
 
-Zhiwei Li
-
-Department of Epidemiology and Health Statistics
-
-School of Public Health, Capital Medical University
-
-No.10 Xitoutiao, Youanmen Wai Street
-
-Beijing, 100069
-
-
 *本教程所有出现的代码可以在`code/code.r`文件中找到。*
 *生成此教程的代码可以在`README.Rmd`文件中找到。*
 

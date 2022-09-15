@@ -3,7 +3,7 @@
     "path": "E:/A/project/github/Geographic-Data-Processing-in-R/README.Rmd",
     "project_path": "README.Rmd",
     "type": "r_markdown",
-    "hash": "0",
+    "hash": "3340254814",
     "contents": "",
     "dirty": false,
     "created": 1663229232805.0,
@@ -12,7 +12,7 @@
     "properties": {
         "source_window_id": "",
         "Source": "Source",
-        "cursorPosition": "11,14",
+        "cursorPosition": "23,0",
         "scrollLine": "6",
         "docOutlineVisible": "1",
         "rmdVisualMode": "false",
@@ -21,11 +21,11 @@
         "rmdVisualCollapsedChunks": ""
     },
     "folds": "",
-    "lastKnownWriteTime": 1663249687,
+    "lastKnownWriteTime": 1663249808,
     "encoding": "UTF-8",
     "collab_server": "",
     "source_window": "",
-    "last_content_update": 1663249687385,
+    "last_content_update": 1663249808419,
     "read_only": false,
     "read_only_alternatives": []
 }
