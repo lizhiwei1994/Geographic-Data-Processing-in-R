@@ -5,13 +5,14 @@ output: github_document
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
 ```{r, include = FALSE}
+options(encoding = 'UTF-8') # 为了正确显示中文
 knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>"
 )
 ```
 
-# Geographic-Data-Processing-in-R
+# R语言地理信息数据处理——Geographic Data Processing in R
 
 <!-- badges: start -->
 <!-- badges: end -->

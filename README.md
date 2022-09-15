@@ -1,7 +1,9 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
-# Geographic-Data-Processing-in-R
+# Geographic Data Processing in R
+
+# R语言地理信息数据处理
 
 <!-- badges: start -->
 <!-- badges: end -->
