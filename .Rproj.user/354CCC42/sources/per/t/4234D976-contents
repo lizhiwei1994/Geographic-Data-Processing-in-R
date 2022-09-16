@@ -127,7 +127,7 @@ class(mypt)
 extract(dat, mypt)
 ```
 
-#### extract()提取单个经纬度下的值
+#### extract()提取多个经纬度下的值
 
 `extract()`函数还能一次提取多个经纬度的数据。
 
