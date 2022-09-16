@@ -1,0 +1,8 @@
+"0","multi_layer_tif = terra::rast('result/多层nc_to_tif.tif')"
+"0","dim(multi_layer_tif)"
+"1","[1]"
+"1"," 360"
+"1"," 720"
+"1","  12"
+"1","
+"

@@ -1,0 +1,1 @@
+"0","terra::writeRaster(nc_rast, filename = 'result/多层nc_to_tif.tif', overwrite = T)"

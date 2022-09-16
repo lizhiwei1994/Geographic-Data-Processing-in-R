@@ -1,0 +1,4 @@
+"0","nc_file = 'data/cru10min30_tmp.nc'"
+"0",""
+"0","nc_rast = terra::rast(nc_file)"
+"0","nc_raster=raster::raster(nc_file)"

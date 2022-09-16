@@ -1,0 +1,2 @@
+"0","library(raster)"
+"0","mync = brick('data/cru10min30_tmp.nc')"

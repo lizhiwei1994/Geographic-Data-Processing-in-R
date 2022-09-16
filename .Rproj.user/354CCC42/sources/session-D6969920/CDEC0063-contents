@@ -1,0 +1,11 @@
+# 这是为了模拟有好多tif文件
+files <- c("CHAP_PM2.5_D1K_20130101_V4.tif", "CHAP_PM2.5_D1K_20130101_V4.tif", "CHAP_PM2.5_D1K_20130101_V4.tif")
+
+library(terra)
+r <- rast(files)
+pts <- data.frame(Lon = 116.3783, Lat = 39.86483) # 这个是感兴趣的经纬度，可以是很多
+e <- extract(r, pts)
+e
+# e的输出结果
+# ID CHAP_PM2.5_D1K_20130101_V4 CHAP_PM2.5_D1K_20130101_V4 CHAP_PM2.5_D1K_20130101_V4
+# 1  1                         57                         57                         57

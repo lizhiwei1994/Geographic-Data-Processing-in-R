@@ -1,0 +1,4 @@
+"0","files2 = c('data/cru10min30_tmp.nc', 'data/cru10min30_tmp.nc')"
+"0","r2 <- terra::rast(files2)"
+"0","e2 <- terra::extract(r2, mypt2)"
+"0","e2"

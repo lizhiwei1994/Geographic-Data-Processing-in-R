@@ -84,7 +84,7 @@ crs(rs)
 writeRaster(rs,"result/rs.tif", overwrite = T)
 ```
 
-### 结果验证
+### 结果验证(提取单个tif中单个经纬度下的值)
 
 接下来我们验证导出的`rs.tif`文件能否通过经纬度，提取到`PM2.5`的浓度。 我们提取`pts`第一行的数据。原始数据如下：
 
@@ -235,9 +235,146 @@ extract(mync, mypt2)
 dim(extract(mync, mypt2))
 ```
 
-## 堆叠netCDF4(nc)文件
+## 批量提取
 
-未完待续...
+首先清空环境。
+
+```{r}
+rm(list = ls())
+```
+
+### 提取多个tif文件多个经纬度下的值
+
+我们通过重复读取`result/`文件夹下的`rs.tif`文件模拟有多个`tif`文件的情况。此数据是我们在[结果保存为tif文件]部分生成的。
+
+```{r}
+files = c('result/rs.tif', 'result/rs.tif')
+```
+
+使用`terra`包中的`rast()`函数读取`files`中的文件。
+
+```{r}
+library(terra)
+r <- terra::rast(files)
+```
+
+创建一个含有多个经纬度的数据框。
+
+```{r}
+mypt2 = data.frame(lon = c(116.35, 115.75, 116.25), lat = c(39.45, 39.55, 39.55))
+```
+
+使用`terra`包中的`extract()`函数提取`mypt2`经纬度下的值。
+
+> `rater`包中也有一个`extract()`函数，建议还是使用`terra`包中的`extract()`函数，因为它速度更快。详情可以参考[这里](https://tmieno2.github.io/R-as-GIS-for-Economists/extraction-speed-comparison.html)。
+
+
+```{r}
+e <- terra::extract(r, mypt2)
+e
+```
+
+可以看到数据有`3`行，代表着`mypt2`中的`3`个经纬度。同时还有`2`列，名字都是`rs`。这分别对应`files`中两个文件提取到的具体值，在本例中代表PM2.5的浓度。由于我们重复读取了`rs`文件两次，所以这`2`列的变量名都是`rs`。在实际情况中，如果你读取不同的`tif`文件，他将会显示不同`tif`文件名称。
+
+### 提取多个nc文件多个经纬度下的值
+
+示例数据使用的是[nc数据加载]部分的`cru10min30_tmp.nc`文件。
+提取多个nc文件多个经纬度下的值与tif文件的方法一致，只需要把文件名称换一下。这里不做详细介绍，可以直接运行以下代码看结果。
+
+```{r}
+files2 = c('data/cru10min30_tmp.nc', 'data/cru10min30_tmp.nc')
+r2 <- terra::rast(files2)
+e2 <- terra::extract(r2, mypt2)
+e2
+```
+
+## nc文件与tif文件相互转换
+
+首先清空环境。
+
+```{r}
+rm(list = ls())
+```
+
+
+
+
+### 多层nc到tif
+
+`nc`文件有很多层数据，比如`cru10min30_tmp.nc`储存这`12`个月的温度，相当于有`12`层数据。
+
+`rast()`和`raster()`函数都可以读取`nc`数据，他们分别来自`terra`包和`raster`包。
+我们分别用这两种方法读入`cru10min30_tmp.nc`文件。
+
+```{r}
+nc_file = 'data/cru10min30_tmp.nc'
+
+nc_rast = terra::rast(nc_file)
+nc_raster=raster::raster(nc_file)
+```
+
+我们查看一下nc_rast和nc_raster的维度。
+
+```{r}
+dim(nc_rast)
+dim(nc_raster)
+```
+
+可以看到，使用`terra::rast()`函数正确读取了`nc`文件，有`12`层数据。但是`raster::raster()`只读取到了nc文件中的`1`层数据。
+
+**所以多层nc数据要用`terra::rast()`读取。**
+
+将多层nc数据保存为tif文件。
+
+```{r eval=FALSE}
+terra::writeRaster(nc_rast, filename = 'result/多层nc_to_tif.tif', overwrite = T)
+```
+
+我们验证一下保存的`多层nc_to_tif.tif`能否正确读取。
+
+```{r}
+multi_layer_tif = terra::rast('result/多层nc_to_tif.tif')
+dim(multi_layer_tif)
+```
+
+成功读取到了12层数据。
+
+再验证能否提取这12层数据。
+
+```{r}
+mypt2 = data.frame(lon = c(116.35, 115.75, 116.25), lat = c(39.45, 39.55, 39.55))
+
+extract(multi_layer_tif, mypt2)
+
+
+```
+
+成功提取到12层数据。
+
+### 单层nc到tif
+
+没有找到合适的单层nc文件来做演示。但是我认为多层和单层提取过程完全一致。你读入的nc是多层的，提取的结果就是多层的。你读入的nc是单层的，提取的结果就是单层。
+
+
+### tif到nc
+
+我目前的研究没有涉及到tif到nc的分析过程。所以这部分不太了解。不过[这篇文章的第6章节](https://pjbartlein.github.io/REarthSysSci/netCDF.html#create-and-write-a-netcdf-file)详细介绍了如何自己创建一个nc文件。感兴趣的可以了解一下。
+
+## 关于rast()和extract()函数的总结
+
+`rast()`和`extract()`函数都来自terra包，非常好用。
+
+`rast()`可以读取`nc`和`tif`文件，无论他们是单层还是多层都能正确读取。而且还可以批量读取，只需要把所有文件地址都存在一个向量中，就像[提取多个tif文件多个经纬度下的值]部分介绍的一样。
+
+
+`extract()`可以提取特定经纬度下的值，也可以[提取特定区域下的值](https://tmieno2.github.io/R-as-GIS-for-Economists/extracting-values-from-raster-layers-for-vector-data.html#extracting-to-polygons-terra-way)。而且不需要将点坐标转化为`sp`格式。如果使用`raster`包中`extract()`函数还需要转换格式，就像[结果验证(提取单个tif中单个经纬度下的值)]部分一样。
+
+## 相关资源：
+
+1. [这个文章讲了在R中提取栅格数据中点，面和线的值。](https://tmieno2.github.io/R-as-GIS-for-Economists/extracting-values-from-raster-layers-for-vector-data.html)
+
+2. [在R中处理netCDF(nc)文件。](https://pjbartlein.github.io/REarthSysSci/netCDF.html#create-and-write-a-netcdf-file)
+
 
 ```{r include=FALSE}
 knitr::purl("README.Rmd", 'code/code.r')

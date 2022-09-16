@@ -1,0 +1,35 @@
+## Kai Kresek, 19112019
+## .nc to .tiff conversion
+## This presents a quick and easy way to convert your ncdf4 (.nc) files to raster (.tiff) format.
+
+# Install relevant packages
+install.packages("raster")
+install.packages("ncdf4")
+install.packages("Rcpp")
+install.packages("rgdal")
+
+# Load raster package
+library(raster)
+
+# Sometimes loading the raster package throws an error. 
+# If this happens, run line 12 and reinstall the packages.
+#.libPaths()
+
+# Create your brick
+fname <- "CHAP_PM2.5_D1K_20130101_V4.nc"
+file.b <- brick(fname)  
+
+# Load and visualize your file 
+file.b
+plot(file.b) # 这个代码只是为了看一下图，实际并不会输出
+
+# The following steps will convert the .nc file to a raster (.tiff format)
+
+# Initiate your .tiff file
+my_raster.tiff <- 'my_raster.tiff' # 这里可以加保存地址，但是不能有中文！！比如：C://lizhiwei//file//my_raster.tiff
+
+# Convert your .nc file to a raster
+r.myfile <- raster(fname)
+
+# Write to your .tiff file
+writeRaster(r.myfile, filename = my_raster.tiff, format = 'GTiff', overwrite = T)
